@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden w-full max-w-[100vw] relative">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TechWorld with Sahana | DevOps Blueprint & AI Infrastructure Guides</title>
+  <meta name="description" content="DevOps Blueprints, Kubernetes Architectures, and AI Infrastructure Guides by Sahana Ghosh. Join 1,000+ engineers learning weekly." />
+  <meta property="og:title" content="TechWorld with Sahana | DevOps Blueprint & AI Infrastructure Guides" />
+  <meta property="og:description" content="DevOps Blueprints, Kubernetes Architectures, and AI Infrastructure Guides by Sahana Ghosh. Join 1,000+ engineers learning weekly." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://techworldwithsahana.substack.com/" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Theme & Scroll initialization script (Default: Light Mode) -->
+  <script>
+    (function() {
+      // Prevent browser from automatically restoring previous scroll position at page bottom
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
+      try {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+          if (!savedTheme) {
+            localStorage.setItem('theme', 'light');
+          }
+        }
+      } catch (e) {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
+  <style>
+    /* Root & Body overflow prevention */
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100vw;
+      position: relative;
+    }
+
+    /* Custom scrollbar for horizontal tracks */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .track-snap {
+      scroll-snap-type: x mandatory;
+      scroll-padding-left: 1rem;
+    }
+    .card-snap {
+      scroll-snap-align: start;
+    }
+
+    /* Infinite Marquee Animations */
+    @keyframes marqueeLeft {
+      0% {
+        transform: translate3d(0, 0, 0);
+      }
+      100% {
+        transform: translate3d(-50%, 0, 0);
+      }
+    }
+    @keyframes marqueeRight {
+      0% {
+        transform: translate3d(-50%, 0, 0);
+      }
+      100% {
+        transform: translate3d(0, 0, 0);
+      }
+    }
+    .marquee-left,
+    .animate-marquee-left {
+      animation: marqueeLeft 35s linear infinite;
+      will-change: transform;
+    }
+    .marquee-right,
+    .animate-marquee-right {
+      animation: marqueeRight 35s linear infinite;
+      will-change: transform;
+    }
+    .marquee-container:hover .marquee-track,
+    .marquee-wrapper:hover .marquee-track {
+      animation-play-state: paused;
+    }
+    .marquee-fade-mask {
+      mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .marquee-left, .marquee-right, .animate-marquee-left, .animate-marquee-right {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col transition-colors duration-200 overflow-x-hidden w-full max-w-[100vw] relative">
+
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/90 dark:bg-slate-950/90 border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
+    <div class="w-full max-w-6xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2 overflow-hidden">
+      
+      <!-- Brand lockup -->
+      <a href="#" class="flex items-center gap-2.5 sm:gap-3 group min-w-0 flex-shrink">
+        <img src="https://media.licdn.com/dms/image/v2/D5603AQFq-_jRav2PDw/profile-displayphoto-scale_400_400/B56Z9PnEHRGgAg-/0/1783747069649?e=1792627200&v=beta&t=49MjpZPNJ9nM7Euw4M6ZPyuZ1RC5TC1MVFrr54FRZLs" alt="Sahana Ghosh" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover shadow-sm ring-2 ring-indigo-500/20 flex-shrink-0" loading="lazy" referrerpolicy="no-referrer">
+        <div class="flex flex-col min-w-0">
+          <span class="text-sm sm:text-base font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
+            TechWorld with Sahana
+          </span>
+          <span class="inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">
+            <span class="relative flex h-2 w-2 shrink-0">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span class="truncate">DevOps & AI Infrastructure Engineer</span>
+          </span>
+        </div>
+      </a>
+
+      <!-- Quick Nav Links -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-300">
+        <a href="https://techworldwithsahana.substack.com/about" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About</a>
+        <a href="https://techworldwithsahana.substack.com/" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Newsletter</a>
+        <a href="https://www.youtube.com/@TechWorldwithSahana" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Videos</a>
+        <a href="https://topmate.io/sahana_ghosh" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">E-books</a>
+      </nav>
+
+      <!-- Action items: Sun/Moon Theme Toggle + Join Newsletter CTA -->
+      <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+        <!-- Sun/Moon Theme Toggle Button -->
+        <button id="theme-toggle" type="button" aria-label="Toggle theme" class="p-2 sm:p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 hover:text-slate-900 dark:hover:text-white transition-colors flex-shrink-0">
+          <!-- Sun Icon (for dark mode) -->
+          <svg id="sun-icon" class="w-4 h-4 sm:w-5 sm:h-5 hidden dark:block text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <!-- Moon Icon (for light mode) -->
+          <svg id="moon-icon" class="w-4 h-4 sm:w-5 sm:h-5 block dark:hidden text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+
+        <!-- Join Newsletter CTA -->
+        <a href="#newsletter" class="px-2.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-600/30 hover:shadow-md hover:shadow-indigo-600/40 transition-all whitespace-nowrap flex-shrink-0 inline-flex items-center justify-center">
+          <span class="sm:hidden">Join</span>
+          <span class="hidden sm:inline">Join Newsletter</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="w-full px-4 text-center relative pt-4 pb-3 overflow-hidden">
+    <div class="max-w-5xl mx-auto">
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white max-w-3xl mx-auto leading-tight mb-5" style="text-wrap: balance;">
+        DevOps Blueprints & AI Infrastructure Guides
+      </h1>
+
+      <div class="flex flex-wrap items-center justify-center gap-4 mb-2">
+        <a href="#newsletter" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md shadow-indigo-600/30 hover:-translate-y-0.5 transition-all">
+          Join 1,000+ Engineers Learning
+        </a>
+        <a href="https://topmate.io/sahana_ghosh" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-800 dark:text-slate-200 font-semibold text-sm hover:border-indigo-500 dark:hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:-translate-y-0.5 transition-all flex items-center gap-2">
+          <span>Check out e-books</span>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Spotlight Feature / Universal Media Banner -->
+  <section id="spotlight" class="w-full max-w-6xl mx-auto px-4 mt-2 mb-8 overflow-hidden">
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-50 to-indigo-50/30 dark:from-slate-900 dark:to-indigo-950/20 p-6 sm:p-8 shadow-sm">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        
+        <!-- Left Side: Copy & CTA (lg:col-span-7) -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 dark:bg-amber-400/10 border border-amber-500/20 text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+            <span>✨</span>
+            <span>SPOTLIGHT</span>
+          </div>
+
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+            Introducing AI For DevOps: The 21-Day Production Blueprint
+          </h2>
+
+          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl">
+            Master LLMs, production RAG, autonomous agents, and 100 system architecture interview solutions.
+          </p>
+
+          <div class="pt-1">
+            <a href="https://topmate.io/sahana_ghosh" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md shadow-indigo-600/25 hover:-translate-y-0.5 transition-all">
+              <span>Learn More ↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Side: Universal Media Slot (lg:col-span-5) -->
+        <div class="lg:col-span-5">
+          <!-- 
+            ========================================================================
+            UNIVERSAL MEDIA SLOT (Options: E-Book Cover, YouTube Video, Sponsor Ad)
+            ========================================================================
+          -->
+
+          <!-- E-Book Cover Image (Active) -->
+          <a href="https://topmate.io/sahana_ghosh" target="_blank" rel="noopener noreferrer" class="block group overflow-hidden rounded-xl shadow-md border border-slate-200 dark:border-slate-800">
+            <img src="https://topmate.io/cdn-cgi/image/width=640,quality=90/https://static.topmate.io/profile_pic_1409516_8e65ed2d-d500-41c4-8f04-49ce719e9448.png" alt="AI for DevOps 21-Day Blueprint" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" referrerpolicy="no-referrer" />
+          </a>
+
+          <!--
+          OPTION B: YouTube Video Embed (Template for future use)
+          <div class="aspect-video w-full rounded-xl overflow-hidden bg-slate-900/10 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-center relative shadow-inner">
+            <iframe src="https://www.youtube.com/embed/FBgQOy4ZR4w?rel=0" title="Spotlight Video" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+          </div>
+          -->
+
+          <!--
+          OPTION C: Sponsor/Ad Clickable Image Banner (Template for future use)
+          <a href="https://sponsor-link.example.com" target="_blank" rel="noopener noreferrer" class="aspect-video w-full rounded-xl overflow-hidden block border border-slate-200 dark:border-slate-700 group relative">
+            <img src="https://via.placeholder.com/640x360?text=Sponsor+Banner" alt="Sponsor" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+            <div class="absolute top-2 right-2 px-2 py-0.5 rounded bg-black/60 text-[10px] text-white uppercase font-bold tracking-wide">Sponsored</div>
+          </a>
+          -->
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Feed & Tracks Container -->
+  <main class="w-full max-w-full overflow-x-hidden pt-4 pb-12 sm:pt-6 sm:pb-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+
+    <!-- 4a. Track 1: Substack (Latest Articles) -->
+    <section id="substack-feed" class="w-full max-w-full overflow-hidden relative space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <h2 class="flex items-center gap-2.5 sm:gap-3 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <svg class="w-7 h-7 sm:w-8 sm:h-8 text-orange-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span>Latest Articles & Deep-Dives</span>
+          </h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            Automatically fetched from TechWorld with Sahana Substack feed
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="https://techworldwithsahana.substack.com/" target="_blank" rel="noopener noreferrer" class="text-xs sm:text-sm font-semibold text-orange-600 dark:text-orange-400 hover:underline flex items-center gap-1">
+            <span>Join 1,000+ engineers &gt;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Substack Marquee Track -->
+      <div class="marquee-container marquee-wrapper w-full max-w-full overflow-hidden relative marquee-fade-mask py-2">
+        <div id="substack-track" class="marquee-track marquee-left animate-marquee-left flex gap-6 w-max pb-2">
+          <!-- Loading skeletons will be replaced by JavaScript -->
+          <div class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 space-y-4 animate-pulse">
+            <div class="w-full h-48 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
+            <div class="h-4 bg-slate-200 dark:bg-slate-800 rounded w-1/3"></div>
+            <div class="h-6 bg-slate-200 dark:bg-slate-800 rounded w-5/6"></div>
+            <div class="h-4 bg-slate-200 dark:bg-slate-800 rounded w-full"></div>
+          </div>
+          <div class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 space-y-4 animate-pulse">
+            <div class="w-full h-48 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
+            <div class="h-4 bg-slate-200 dark:bg-slate-800 rounded w-1/3"></div>
+            <div class="h-6 bg-slate-200 dark:bg-slate-800 rounded w-5/6"></div>
+            <div class="h-4 bg-slate-200 dark:bg-slate-800 rounded w-full"></div>
+          </div>
+          <div class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 space-y-4 animate-pulse">
+            <div class="w-full h-48 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
+            <div class="h-4 bg-slate-200 dark:bg-slate-800 rounded w-1/3"></div>
+            <div class="h-6 bg-slate-200 dark:bg-slate-800 rounded w-5/6"></div>
+            <div class="h-4 bg-slate-200 dark:bg-slate-800 rounded w-full"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4b. Track 2: Topmate E-Books & Blueprints -->
+    <section id="topmate-store" class="w-full max-w-full overflow-hidden relative space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <h2 class="flex items-center gap-2.5 sm:gap-3 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <svg class="w-7 h-7 sm:w-8 sm:h-8 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            <span>Buy My E-Books & Blueprints</span>
+          </h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            Battle-tested architecture guides, interview scenario solutions, and production troubleshooting runbooks
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="https://topmate.io/sahana_ghosh" target="_blank" rel="noopener noreferrer" class="text-xs sm:text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1">
+            <span>Check out all e-books &gt;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Topmate Marquee Track -->
+      <div class="marquee-container w-full max-w-full overflow-hidden relative marquee-fade-mask py-2">
+        <div id="topmate-track" class="marquee-track marquee-right flex gap-6 w-max pb-2">
+          
+          <!-- Card 1: AI for DevOps - 21 Days Course -->
+          <div class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col group">
+            <div class="relative h-52 bg-slate-950 overflow-hidden">
+              <img 
+                src="https://topmate.io/cdn-cgi/image/width=640,quality=90/https://static.topmate.io/profile_pic_1409516_8e65ed2d-d500-41c4-8f04-49ce719e9448.png" 
+                alt="AI for DevOps - 21 Days Course" 
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+              <div>
+                <div class="flex items-center gap-1.5 text-amber-500 text-xs font-semibold mb-2">
+                  <span>★ 5.0</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  AI for DevOps - 21 Days Course
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2 line-clamp-2">
+                  Master AI for DevOps in 21 Days
+                </p>
+              </div>
+              <a href="https://topmate.io/sahana_ghosh/2314836/pay?utm_source=public_profile&utm_campaign=sahana_ghosh" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-colors">
+                <span>Buy Now</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 2: DevOps Deployment Failures & Fixes -->
+          <div class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col group">
+            <div class="relative h-52 bg-slate-950 overflow-hidden">
+              <img 
+                src="https://topmate.io/cdn-cgi/image/width=640,quality=90/https://static.topmate.io/w6GGFZQrpFuAi5C1fajo8g.png" 
+                alt="DevOps Deployment Failures & Fixes" 
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+              <div>
+                <div class="flex items-center gap-1.5 text-amber-500 text-xs font-semibold mb-2">
+                  <span>★ 5.0</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  DevOps Deployment Failures & Fixes
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2 line-clamp-2">
+                  Ultimate Visual Interview Ready Guide
+                </p>
+              </div>
+              <a href="https://topmate.io/sahana_ghosh/1715831/pay?utm_source=public_profile&utm_campaign=sahana_ghosh" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-colors">
+                <span>Buy Now</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 3: DevOps RoadMap -->
+          <div class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col group">
+            <div class="relative h-52 bg-slate-950 overflow-hidden">
+              <img 
+                src="https://topmate.io/cdn-cgi/image/width=640,quality=90/https://static.topmate.io/dXcjpDxW28npGsXaRTov4p.png" 
+                alt="DevOps RoadMap" 
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+              <div>
+                <div class="flex items-center gap-1.5 text-amber-500 text-xs font-semibold mb-2">
+                  <span>★ 5.0</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  DevOps RoadMap
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2 line-clamp-2">
+                  DevOps Roadmap 2026
+                </p>
+              </div>
+              <a href="https://topmate.io/sahana_ghosh/1894597/pay?utm_source=public_profile&utm_campaign=sahana_ghosh" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-colors">
+                <span>Buy Now</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Duplicate Set for Seamless 50% Loop -->
+          <!-- Card 1 Duplicate -->
+          <div class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col group" aria-hidden="true">
+            <div class="relative h-52 bg-slate-950 overflow-hidden">
+              <img 
+                src="https://topmate.io/cdn-cgi/image/width=640,quality=90/https://static.topmate.io/profile_pic_1409516_8e65ed2d-d500-41c4-8f04-49ce719e9448.png" 
+                alt="AI for DevOps - 21 Days Course" 
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+              <div>
+                <div class="flex items-center gap-1.5 text-amber-500 text-xs font-semibold mb-2">
+                  <span>★ 5.0</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  AI for DevOps - 21 Days Course
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2 line-clamp-2">
+                  Master AI for DevOps in 21 Days
+                </p>
+              </div>
+              <a href="https://topmate.io/sahana_ghosh/2314836/pay?utm_source=public_profile&utm_campaign=sahana_ghosh" target="_blank" rel="noopener noreferrer" tabindex="-1" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-colors">
+                <span>Buy Now</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 2 Duplicate -->
+          <div class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col group" aria-hidden="true">
+            <div class="relative h-52 bg-slate-950 overflow-hidden">
+              <img 
+                src="https://topmate.io/cdn-cgi/image/width=640,quality=90/https://static.topmate.io/w6GGFZQrpFuAi5C1fajo8g.png" 
+                alt="DevOps Deployment Failures & Fixes" 
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+              <div>
+                <div class="flex items-center gap-1.5 text-amber-500 text-xs font-semibold mb-2">
+                  <span>★ 5.0</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  DevOps Deployment Failures & Fixes
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2 line-clamp-2">
+                  Ultimate Visual Interview Ready Guide
+                </p>
+              </div>
+              <a href="https://topmate.io/sahana_ghosh/1715831/pay?utm_source=public_profile&utm_campaign=sahana_ghosh" target="_blank" rel="noopener noreferrer" tabindex="-1" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-colors">
+                <span>Buy Now</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 3 Duplicate -->
+          <div class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col group" aria-hidden="true">
+            <div class="relative h-52 bg-slate-950 overflow-hidden">
+              <img 
+                src="https://topmate.io/cdn-cgi/image/width=640,quality=90/https://static.topmate.io/dXcjpDxW28npGsXaRTov4p.png" 
+                alt="DevOps RoadMap" 
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+              <div>
+                <div class="flex items-center gap-1.5 text-amber-500 text-xs font-semibold mb-2">
+                  <span>★ 5.0</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  DevOps RoadMap
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2 line-clamp-2">
+                  DevOps Roadmap 2026
+                </p>
+              </div>
+              <a href="https://topmate.io/sahana_ghosh/1894597/pay?utm_source=public_profile&utm_campaign=sahana_ghosh" target="_blank" rel="noopener noreferrer" tabindex="-1" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-colors">
+                <span>Buy Now</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 4c. Track 3: LinkedIn (Recent Insights) -->
+    <section id="linkedin-insights" class="w-full max-w-full overflow-hidden relative space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <h2 class="flex items-center gap-2.5 sm:gap-3 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <svg class="w-7 h-7 sm:w-8 sm:h-8 text-[#0A66C2] shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+            </svg>
+            <span>LinkedIn Technical Breakdowns</span>
+          </h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            Real-world challenges, production incidents, and architectural discussions
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="https://www.linkedin.com/in/ghoshsahana/" target="_blank" rel="noopener noreferrer" class="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+            <span>Join 7K+ engineers &gt;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- LinkedIn Marquee Track -->
+      <div class="marquee-container w-full max-w-full overflow-hidden relative marquee-fade-mask py-2">
+        <div id="linkedin-track" class="marquee-track marquee-left flex gap-6 w-max pb-2">
+          
+          <!-- Post 1: I just built a RAG-powered DevOps Assistant (With Image) -->
+          <a href="https://www.linkedin.com/feed/update/urn:li:share:7504418990107070464/" target="_blank" rel="noopener noreferrer" class="w-[340px] sm:w-[390px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://media.licdn.com/dms/image/v2/D5603AQFq-_jRav2PDw/profile-displayphoto-scale_400_400/B56Z9PnEHRGgAg-/0/1783747069649?e=1792627200&v=beta&t=49MjpZPNJ9nM7Euw4M6ZPyuZ1RC5TC1MVFrr54FRZLs" alt="Sahana Ghosh" class="w-9 h-9 rounded-full object-cover shrink-0" loading="lazy" referrerpolicy="no-referrer">
+                  <div>
+                    <div class="text-xs font-bold text-slate-900 dark:text-white">Sahana Ghosh</div>
+                    <div class="text-[11px] text-slate-500 dark:text-slate-400">DevOps & Cloud Lead</div>
+                  </div>
+                </div>
+                <svg class="w-5 h-5 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+              </div>
+              
+              <div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
+                  I just built a RAG-powered DevOps Assistant 🚀
+                </h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">
+                  Day 14 of 21-Day AI for DevOps: Connected assistant to real GitHub repository data instead of relying solely on LLM general knowledge.
+                </p>
+              </div>
+
+              <!-- Image Preview -->
+              <div class="relative w-full h-44 rounded-xl overflow-hidden bg-slate-950 border border-slate-200/70 dark:border-slate-800">
+                <img 
+                  src="https://media.licdn.com/dms/image/v2/D5622AQHmLLXCNVS6rw/feedshare-shrink_800/B56aCUNTkmHIAc-/0/1789192911408?e=1792627200&v=beta&t=D46U-EXequ2oEXKieV6Es5yzDSBWAgmVSsG475mnNME" 
+                  alt="RAG-powered DevOps Assistant Preview" 
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end">
+              <span class="text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:underline flex items-center gap-1">
+                <span>View Post on LinkedIn</span>
+                <span>↗</span>
+              </span>
+            </div>
+          </a>
+
+          <!-- Post 2: Top 10 prompts I use as a DevOps engineer (Text Only / Snippet Style) -->
+          <a href="https://www.linkedin.com/feed/update/urn:li:share:7507838850619191296/" target="_blank" rel="noopener noreferrer" class="w-[340px] sm:w-[390px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://media.licdn.com/dms/image/v2/D5603AQFq-_jRav2PDw/profile-displayphoto-scale_400_400/B56Z9PnEHRGgAg-/0/1783747069649?e=1792627200&v=beta&t=49MjpZPNJ9nM7Euw4M6ZPyuZ1RC5TC1MVFrr54FRZLs" alt="Sahana Ghosh" class="w-9 h-9 rounded-full object-cover shrink-0" loading="lazy" referrerpolicy="no-referrer">
+                  <div>
+                    <div class="text-xs font-bold text-slate-900 dark:text-white">Sahana Ghosh</div>
+                    <div class="text-[11px] text-slate-500 dark:text-slate-400">DevOps & Cloud Lead</div>
+                  </div>
+                </div>
+                <svg class="w-5 h-5 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+              </div>
+              
+              <div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
+                  Top 10 prompts I use as a DevOps engineer
+                </h3>
+              </div>
+
+              <!-- Terminal Quote Snippet Container -->
+              <div class="p-3.5 rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 text-slate-200 font-mono text-xs leading-relaxed space-y-1.5 shadow-inner">
+                <div class="text-[11px] text-emerald-400 font-sans font-bold flex items-center gap-1.5 mb-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span>DevOps Engineer Prompts</span>
+                </div>
+                <div class="text-slate-300"><span class="text-slate-500 font-mono">1.</span> Why is the pod crashing?</div>
+                <div class="text-slate-300"><span class="text-slate-500 font-mono">2.</span> Okay… it&apos;s still crashing.</div>
+                <div class="text-slate-300"><span class="text-slate-500 font-mono">3.</span> Do you not understand? IT&apos;S STILL CRASHING.</div>
+                <div class="text-slate-300"><span class="text-slate-500 font-mono">4.</span> Why are you crashing? What did I ever do to you?</div>
+                <div class="text-emerald-300 font-semibold"><span class="text-slate-500 font-mono">5.</span> Fix it.</div>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end">
+              <span class="text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:underline flex items-center gap-1">
+                <span>View Post on LinkedIn</span>
+                <span>↗</span>
+              </span>
+            </div>
+          </a>
+
+          <!-- Post 3: RAG can tell you what to do. An AI Agent can actually go and do it. (With Image) -->
+          <a href="https://www.linkedin.com/feed/update/urn:li:share:7505443332492410880/" target="_blank" rel="noopener noreferrer" class="w-[340px] sm:w-[390px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://media.licdn.com/dms/image/v2/D5603AQFq-_jRav2PDw/profile-displayphoto-scale_400_400/B56Z9PnEHRGgAg-/0/1783747069649?e=1792627200&v=beta&t=49MjpZPNJ9nM7Euw4M6ZPyuZ1RC5TC1MVFrr54FRZLs" alt="Sahana Ghosh" class="w-9 h-9 rounded-full object-cover shrink-0" loading="lazy" referrerpolicy="no-referrer">
+                  <div>
+                    <div class="text-xs font-bold text-slate-900 dark:text-white">Sahana Ghosh</div>
+                    <div class="text-[11px] text-slate-500 dark:text-slate-400">DevOps & Cloud Lead</div>
+                  </div>
+                </div>
+                <svg class="w-5 h-5 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+              </div>
+              
+              <div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
+                  RAG can tell you what to do. An AI Agent can actually go and do it. 🤖
+                </h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">
+                  Day 15 of 21-Day AI for DevOps: Moving beyond basic RAG to autonomous troubleshooting agents handling production 500s.
+                </p>
+              </div>
+
+              <!-- Image Preview -->
+              <div class="relative w-full h-44 rounded-xl overflow-hidden bg-slate-950 border border-slate-200/70 dark:border-slate-800">
+                <img 
+                  src="https://media.licdn.com/dms/image/v2/D5622AQFI4XVVDZaK5w/feedshare-shrink_800/B56aCiw8DBHkAc-/0/1789437133268?e=1792627200&v=beta&t=Zre-21UrA-27olt4kcNN1ij0qCROlJSmuCyOpOu27FE" 
+                  alt="AI Agent vs RAG Preview" 
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end">
+              <span class="text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:underline flex items-center gap-1">
+                <span>View Post on LinkedIn</span>
+                <span>↗</span>
+              </span>
+            </div>
+          </a>
+
+          <!-- Duplicate Set for Seamless 50% Loop -->
+          <!-- Post 1 Duplicate -->
+          <a href="https://www.linkedin.com/feed/update/urn:li:share:7504418990107070464/" target="_blank" rel="noopener noreferrer" tabindex="-1" class="w-[340px] sm:w-[390px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group" aria-hidden="true">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://media.licdn.com/dms/image/v2/D5603AQFq-_jRav2PDw/profile-displayphoto-scale_400_400/B56Z9PnEHRGgAg-/0/1783747069649?e=1792627200&v=beta&t=49MjpZPNJ9nM7Euw4M6ZPyuZ1RC5TC1MVFrr54FRZLs" alt="Sahana Ghosh" class="w-9 h-9 rounded-full object-cover shrink-0" loading="lazy" referrerpolicy="no-referrer">
+                  <div>
+                    <div class="text-xs font-bold text-slate-900 dark:text-white">Sahana Ghosh</div>
+                    <div class="text-[11px] text-slate-500 dark:text-slate-400">DevOps & Cloud Lead</div>
+                  </div>
+                </div>
+                <svg class="w-5 h-5 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+              </div>
+              
+              <div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
+                  I just built a RAG-powered DevOps Assistant 🚀
+                </h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">
+                  Day 14 of 21-Day AI for DevOps: Connected assistant to real GitHub repository data instead of relying solely on LLM general knowledge.
+                </p>
+              </div>
+
+              <!-- Image Preview -->
+              <div class="relative w-full h-44 rounded-xl overflow-hidden bg-slate-950 border border-slate-200/70 dark:border-slate-800">
+                <img 
+                  src="https://media.licdn.com/dms/image/v2/D5622AQHmLLXCNVS6rw/feedshare-shrink_800/B56aCUNTkmHIAc-/0/1789192911408?e=1792627200&v=beta&t=D46U-EXequ2oEXKieV6Es5yzDSBWAgmVSsG475mnNME" 
+                  alt="RAG-powered DevOps Assistant Preview" 
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end">
+              <span class="text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:underline flex items-center gap-1">
+                <span>View Post on LinkedIn</span>
+                <span>↗</span>
+              </span>
+            </div>
+          </a>
+
+          <!-- Post 2 Duplicate -->
+          <a href="https://www.linkedin.com/feed/update/urn:li:share:7507838850619191296/" target="_blank" rel="noopener noreferrer" tabindex="-1" class="w-[340px] sm:w-[390px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group" aria-hidden="true">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://media.licdn.com/dms/image/v2/D5603AQFq-_jRav2PDw/profile-displayphoto-scale_400_400/B56Z9PnEHRGgAg-/0/1783747069649?e=1792627200&v=beta&t=49MjpZPNJ9nM7Euw4M6ZPyuZ1RC5TC1MVFrr54FRZLs" alt="Sahana Ghosh" class="w-9 h-9 rounded-full object-cover shrink-0" loading="lazy" referrerpolicy="no-referrer">
+                  <div>
+                    <div class="text-xs font-bold text-slate-900 dark:text-white">Sahana Ghosh</div>
+                    <div class="text-[11px] text-slate-500 dark:text-slate-400">DevOps & Cloud Lead</div>
+                  </div>
+                </div>
+                <svg class="w-5 h-5 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+              </div>
+              
+              <div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
+                  Top 10 prompts I use as a DevOps engineer
+                </h3>
+              </div>
+
+              <!-- Terminal Quote Snippet Container -->
+              <div class="p-3.5 rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 text-slate-200 font-mono text-xs leading-relaxed space-y-1.5 shadow-inner">
+                <div class="text-[11px] text-emerald-400 font-sans font-bold flex items-center gap-1.5 mb-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span>DevOps Engineer Prompts</span>
+                </div>
+                <div class="text-slate-300"><span class="text-slate-500 font-mono">1.</span> Why is the pod crashing?</div>
+                <div class="text-slate-300"><span class="text-slate-500 font-mono">2.</span> Okay… it&apos;s still crashing.</div>
+                <div class="text-slate-300"><span class="text-slate-500 font-mono">3.</span> Do you not understand? IT&apos;S STILL CRASHING.</div>
+                <div class="text-slate-300"><span class="text-slate-500 font-mono">4.</span> Why are you crashing? What did I ever do to you?</div>
+                <div class="text-emerald-300 font-semibold"><span class="text-slate-500 font-mono">5.</span> Fix it.</div>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end">
+              <span class="text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:underline flex items-center gap-1">
+                <span>View Post on LinkedIn</span>
+                <span>↗</span>
+              </span>
+            </div>
+          </a>
+
+          <!-- Post 3 Duplicate -->
+          <a href="https://www.linkedin.com/feed/update/urn:li:share:7505443332492410880/" target="_blank" rel="noopener noreferrer" tabindex="-1" class="w-[340px] sm:w-[390px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group" aria-hidden="true">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://media.licdn.com/dms/image/v2/D5603AQFq-_jRav2PDw/profile-displayphoto-scale_400_400/B56Z9PnEHRGgAg-/0/1783747069649?e=1792627200&v=beta&t=49MjpZPNJ9nM7Euw4M6ZPyuZ1RC5TC1MVFrr54FRZLs" alt="Sahana Ghosh" class="w-9 h-9 rounded-full object-cover shrink-0" loading="lazy" referrerpolicy="no-referrer">
+                  <div>
+                    <div class="text-xs font-bold text-slate-900 dark:text-white">Sahana Ghosh</div>
+                    <div class="text-[11px] text-slate-500 dark:text-slate-400">DevOps & Cloud Lead</div>
+                  </div>
+                </div>
+                <svg class="w-5 h-5 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+              </div>
+              
+              <div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
+                  RAG can tell you what to do. An AI Agent can actually go and do it. 🤖
+                </h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">
+                  Day 15 of 21-Day AI for DevOps: Moving beyond basic RAG to autonomous troubleshooting agents handling production 500s.
+                </p>
+              </div>
+
+              <!-- Image Preview -->
+              <div class="relative w-full h-44 rounded-xl overflow-hidden bg-slate-950 border border-slate-200/70 dark:border-slate-800">
+                <img 
+                  src="https://media.licdn.com/dms/image/v2/D5622AQFI4XVVDZaK5w/feedshare-shrink_800/B56aCiw8DBHkAc-/0/1789437133268?e=1792627200&v=beta&t=Zre-21UrA-27olt4kcNN1ij0qCROlJSmuCyOpOu27FE" 
+                  alt="AI Agent vs RAG Preview" 
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end">
+              <span class="text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:underline flex items-center gap-1">
+                <span>View Post on LinkedIn</span>
+                <span>↗</span>
+              </span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 4d. Track 4: YouTube (Recent Architecture Videos) -->
+    <section id="youtube-videos" class="w-full max-w-full overflow-hidden relative space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <h2 class="flex items-center gap-2.5 sm:gap-3 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <svg class="w-7 h-7 sm:w-8 sm:h-8 text-[#FF0000] shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            <span>YouTube Architecture Breakdowns</span>
+          </h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            End-to-end setups, terminal demos, and system teardowns on @TechWorldwithSahana
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="https://www.youtube.com/@TechWorldwithSahana" target="_blank" rel="noopener noreferrer" class="text-xs sm:text-sm font-semibold text-red-600 dark:text-red-400 hover:underline flex items-center gap-1">
+            <span>Join 6K+ engineers &gt;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- YouTube Marquee Track -->
+      <div class="marquee-container w-full max-w-full overflow-hidden relative marquee-fade-mask py-2">
+        <div id="youtube-track" class="marquee-track marquee-right flex gap-6 w-max pb-2">
+          
+          <!-- Video 1: Kubernetes in 15 Min | Interview Q&A Crash Course (Chapter 1) -->
+          <a href="https://www.youtube.com/watch?v=FBgQOy4ZR4w" target="_blank" rel="noopener noreferrer" class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col group">
+            <div class="relative aspect-video bg-slate-950 overflow-hidden">
+              <img 
+                src="https://img.youtube.com/vi/FBgQOy4ZR4w/maxresdefault.jpg" 
+                alt="Kubernetes in 15 Min | Interview Q&A Crash Course (Chapter 1)" 
+                loading="lazy"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                onerror="this.src='https://img.youtube.com/vi/FBgQOy4ZR4w/hqdefault.jpg'"
+              />
+              <div class="absolute inset-0 bg-slate-950/30 group-hover:bg-slate-950/10 transition-colors flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+              </div>
+              <span class="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-black/80 backdrop-blur-sm text-[11px] font-mono font-medium text-white">
+                16:20
+              </span>
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
+              <div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Chapter 1 · Interview Crash Course</div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mt-1 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2">
+                  Kubernetes in 15 Min | Interview Q&A Crash Course (Chapter 1)
+                </h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">
+                  Essential questions interviewers ask on pods, services, ingress, and deployments with clear visual diagrams.
+                </p>
+              </div>
+              <div class="text-xs font-semibold text-red-600 dark:text-red-400 flex items-center gap-1 group-hover:underline">
+                <span>Watch Video</span>
+                <span>↗</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Video 2: 10 Kubernetes Real-World Questions Solved in 15 Min | Hands-On -->
+          <a href="https://www.youtube.com/watch?v=SJSm_VKg_gU" target="_blank" rel="noopener noreferrer" class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col group">
+            <div class="relative aspect-video bg-slate-950 overflow-hidden">
+              <img 
+                src="https://img.youtube.com/vi/SJSm_VKg_gU/maxresdefault.jpg" 
+                alt="10 Kubernetes Real-World Questions Solved in 15 Min | Hands-On" 
+                loading="lazy"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                onerror="this.src='https://img.youtube.com/vi/SJSm_VKg_gU/hqdefault.jpg'"
+              />
+              <div class="absolute inset-0 bg-slate-950/30 group-hover:bg-slate-950/10 transition-colors flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+              </div>
+              <span class="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-black/80 backdrop-blur-sm text-[11px] font-mono font-medium text-white">
+                12:03
+              </span>
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
+              <div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Hands-On Practice · SRE Scenarios</div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mt-1 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2">
+                  10 Kubernetes Real-World Questions Solved in 15 Min | Hands-On
+                </h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">
+                  Step-by-step terminal breakdown solving real production scenarios and cluster troubleshooting questions.
+                </p>
+              </div>
+              <div class="text-xs font-semibold text-red-600 dark:text-red-400 flex items-center gap-1 group-hover:underline">
+                <span>Watch Video</span>
+                <span>↗</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Video 3: 10 Real-World Kubernetes Failures & Their Fixes (CrashLoopBackOff, OOMKilled) -->
+          <a href="https://www.youtube.com/watch?v=xt9_il3IDSE" target="_blank" rel="noopener noreferrer" class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col group">
+            <div class="relative aspect-video bg-slate-950 overflow-hidden">
+              <img 
+                src="https://img.youtube.com/vi/xt9_il3IDSE/maxresdefault.jpg" 
+                alt="10 Real-World Kubernetes Failures & Their Fixes (CrashLoopBackOff, OOMKilled)" 
+                loading="lazy"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                onerror="this.src='https://img.youtube.com/vi/xt9_il3IDSE/hqdefault.jpg'"
+              />
+              <div class="absolute inset-0 bg-slate-950/30 group-hover:bg-slate-950/10 transition-colors flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+              </div>
+              <span class="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-black/80 backdrop-blur-sm text-[11px] font-mono font-medium text-white">
+                12:11
+              </span>
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
+              <div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Production Troubleshooting · Cluster Fixes</div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mt-1 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2">
+                  10 Real-World Kubernetes Failures & Their Fixes (CrashLoopBackOff, OOMKilled)
+                </h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">
+                  Mastering debugging workflows for CrashLoopBackOff, OOMKilled, ImagePullBackOff, and readiness probe failures.
+                </p>
+              </div>
+              <div class="text-xs font-semibold text-red-600 dark:text-red-400 flex items-center gap-1 group-hover:underline">
+                <span>Watch Video</span>
+                <span>↗</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Duplicate Set for Seamless 50% Loop -->
+          <!-- Video 1 Duplicate -->
+          <a href="https://www.youtube.com/watch?v=FBgQOy4ZR4w" target="_blank" rel="noopener noreferrer" tabindex="-1" class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col group" aria-hidden="true">
+            <div class="relative aspect-video bg-slate-950 overflow-hidden">
+              <img 
+                src="https://img.youtube.com/vi/FBgQOy4ZR4w/maxresdefault.jpg" 
+                alt="Kubernetes in 15 Min | Interview Q&A Crash Course (Chapter 1)" 
+                loading="lazy"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                onerror="this.src='https://img.youtube.com/vi/FBgQOy4ZR4w/hqdefault.jpg'"
+              />
+              <div class="absolute inset-0 bg-slate-950/30 group-hover:bg-slate-950/10 transition-colors flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+              </div>
+              <span class="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-black/80 backdrop-blur-sm text-[11px] font-mono font-medium text-white">
+                16:20
+              </span>
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
+              <div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Chapter 1 · Interview Crash Course</div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mt-1 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2">
+                  Kubernetes in 15 Min | Interview Q&A Crash Course (Chapter 1)
+                </h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">
+                  Essential questions interviewers ask on pods, services, ingress, and deployments with clear visual diagrams.
+                </p>
+              </div>
+              <div class="text-xs font-semibold text-red-600 dark:text-red-400 flex items-center gap-1 group-hover:underline">
+                <span>Watch Video</span>
+                <span>↗</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Video 2 Duplicate -->
+          <a href="https://www.youtube.com/watch?v=SJSm_VKg_gU" target="_blank" rel="noopener noreferrer" tabindex="-1" class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col group" aria-hidden="true">
+            <div class="relative aspect-video bg-slate-950 overflow-hidden">
+              <img 
+                src="https://img.youtube.com/vi/SJSm_VKg_gU/maxresdefault.jpg" 
+                alt="10 Kubernetes Real-World Questions Solved in 15 Min | Hands-On" 
+                loading="lazy"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                onerror="this.src='https://img.youtube.com/vi/SJSm_VKg_gU/hqdefault.jpg'"
+              />
+              <div class="absolute inset-0 bg-slate-950/30 group-hover:bg-slate-950/10 transition-colors flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+              </div>
+              <span class="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-black/80 backdrop-blur-sm text-[11px] font-mono font-medium text-white">
+                12:03
+              </span>
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
+              <div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Hands-On Practice · SRE Scenarios</div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mt-1 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2">
+                  10 Kubernetes Real-World Questions Solved in 15 Min | Hands-On
+                </h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">
+                  Step-by-step terminal breakdown solving real production scenarios and cluster troubleshooting questions.
+                </p>
+              </div>
+              <div class="text-xs font-semibold text-red-600 dark:text-red-400 flex items-center gap-1 group-hover:underline">
+                <span>Watch Video</span>
+                <span>↗</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Video 3 Duplicate -->
+          <a href="https://www.youtube.com/watch?v=xt9_il3IDSE" target="_blank" rel="noopener noreferrer" tabindex="-1" class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col group" aria-hidden="true">
+            <div class="relative aspect-video bg-slate-950 overflow-hidden">
+              <img 
+                src="https://img.youtube.com/vi/xt9_il3IDSE/maxresdefault.jpg" 
+                alt="10 Real-World Kubernetes Failures & Their Fixes (CrashLoopBackOff, OOMKilled)" 
+                loading="lazy"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                onerror="this.src='https://img.youtube.com/vi/xt9_il3IDSE/hqdefault.jpg'"
+              />
+              <div class="absolute inset-0 bg-slate-950/30 group-hover:bg-slate-950/10 transition-colors flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <svg class="w-6 h-6 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+              </div>
+              <span class="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-black/80 backdrop-blur-sm text-[11px] font-mono font-medium text-white">
+                12:11
+              </span>
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
+              <div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Production Troubleshooting · Cluster Fixes</div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mt-1 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2">
+                  10 Real-World Kubernetes Failures & Their Fixes (CrashLoopBackOff, OOMKilled)
+                </h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">
+                  Mastering debugging workflows for CrashLoopBackOff, OOMKilled, ImagePullBackOff, and readiness probe failures.
+                </p>
+              </div>
+              <div class="text-xs font-semibold text-red-600 dark:text-red-400 flex items-center gap-1 group-hover:underline">
+                <span>Watch Video</span>
+                <span>↗</span>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 4e. Track 5: Instagram (Visual Cheatsheets & Reels) -->
+    <section id="instagram-reels" class="w-full max-w-full overflow-hidden relative space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <h2 class="flex items-center gap-2.5 sm:gap-3 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <svg class="w-7 h-7 sm:w-8 sm:h-8 text-[#E4405F] shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+            <span>Instagram DevOps Reels & Guides</span>
+          </h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            Latest Reels & architecture breakdowns
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="https://www.instagram.com/techworldwithsahana" target="_blank" rel="noopener noreferrer" class="text-xs sm:text-sm font-semibold text-pink-600 dark:text-pink-400 hover:underline flex items-center gap-1">
+            <span>Join 12K+ engineers &gt;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Instagram Marquee Track -->
+      <div class="marquee-container w-full max-w-full overflow-hidden relative marquee-fade-mask py-2">
+        <div id="instagram-track" class="marquee-track marquee-left flex gap-6 w-max pb-2">
+        
+        <!-- Insta Card 1: 3 Commits = 3 Runs: Stop Burning CI/CD Minutes 🛑 -->
+        <a href="https://www.instagram.com/p/Dd9INi3BaJZ/" target="_blank" rel="noopener noreferrer" class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+          <div>
+            <!-- Elegant Tech Gradient Cover Card with Instagram Badge & Category Tag -->
+            <div class="relative h-44 bg-gradient-to-br from-rose-950 via-slate-900 to-amber-950 p-5 flex flex-col justify-between border-b border-rose-900/30 overflow-hidden">
+              <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-rose-500/10 blur-xl pointer-events-none"></div>
+              <div class="relative z-10 flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-md text-[11px] font-mono font-bold tracking-wider uppercase bg-rose-500/20 text-rose-300 border border-rose-500/30 backdrop-blur-sm">
+                  CI/CD
+                </span>
+                <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </div>
+              </div>
+
+              <!-- Visual Architecture Graphic -->
+              <div class="relative z-10 space-y-2">
+                <div class="flex items-center gap-1.5 text-[11px] font-mono text-rose-200/90 bg-black/40 px-2.5 py-1 rounded-lg border border-rose-500/20 backdrop-blur-sm">
+                  <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                  <span>concurrency: cancel-in-progress</span>
+                </div>
+                <div class="flex items-center gap-2 text-[10px] font-mono text-slate-400">
+                  <span class="line-through text-slate-500">Run #1 (Auto-cancelled)</span>
+                  <span>&rarr;</span>
+                  <span class="text-emerald-400 font-semibold">Run #3 Active</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Content -->
+            <div class="p-5 space-y-2.5">
+              <div class="flex items-center gap-2 text-xs font-semibold text-pink-600 dark:text-pink-400">
+                <span>@techworldwithsahana</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors line-clamp-2">
+                3 Commits = 3 Runs: Stop Burning CI/CD Minutes 🛑
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3">
+                Stop burning your CI/CD minutes on obsolete builds. Learn how concurrency controls cancel outdated pipeline runs.
+              </p>
+            </div>
+          </div>
+
+          <div class="px-5 pb-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Reel</span>
+            <span class="text-xs font-semibold text-pink-600 dark:text-pink-400 group-hover:underline flex items-center gap-1">
+              <span>Watch Reel</span>
+              <span>↗</span>
+            </span>
+          </div>
+        </a>
+
+        <!-- Insta Card 2: Push vs Pull Deployment in Kubernetes -->
+        <a href="https://www.instagram.com/p/Dd2_Cz-JSQj/" target="_blank" rel="noopener noreferrer" class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+          <div>
+            <!-- Elegant Tech Gradient Cover Card with Instagram Badge & Category Tag -->
+            <div class="relative h-44 bg-gradient-to-br from-cyan-950 via-slate-900 to-blue-950 p-5 flex flex-col justify-between border-b border-cyan-900/30 overflow-hidden">
+              <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-cyan-500/10 blur-xl pointer-events-none"></div>
+              <div class="relative z-10 flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-md text-[11px] font-mono font-bold tracking-wider uppercase bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 backdrop-blur-sm">
+                  GitOps
+                </span>
+                <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </div>
+              </div>
+
+              <!-- Visual Architecture Graphic -->
+              <div class="relative z-10 space-y-2">
+                <div class="flex items-center gap-1.5 text-[11px] font-mono text-cyan-200/90 bg-black/40 px-2.5 py-1 rounded-lg border border-cyan-500/20 backdrop-blur-sm">
+                  <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+                  <span>Git Repository &harr; In-Cluster Pull</span>
+                </div>
+                <div class="flex items-center justify-between text-[10px] font-mono text-slate-400">
+                  <span>Push: CI Admin Access</span>
+                  <span class="text-cyan-300 font-semibold">Pull: Zero Open Ingress</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Content -->
+            <div class="p-5 space-y-2.5">
+              <div class="flex items-center gap-2 text-xs font-semibold text-pink-600 dark:text-pink-400">
+                <span>@techworldwithsahana</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors line-clamp-2">
+                Push vs Pull Deployment in Kubernetes
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3">
+                Are you still giving your CI/CD runner full admin access to your production Kubernetes cluster? Here's why GitOps pull wins.
+              </p>
+            </div>
+          </div>
+
+          <div class="px-5 pb-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Reel</span>
+            <span class="text-xs font-semibold text-pink-600 dark:text-pink-400 group-hover:underline flex items-center gap-1">
+              <span>Watch Reel</span>
+              <span>↗</span>
+            </span>
+          </div>
+        </a>
+
+        <!-- Insta Card 3: From DevOps to AI-Integrated DevOps in 21 Days -->
+        <a href="https://www.instagram.com/p/Dd1PhLFBz15/" target="_blank" rel="noopener noreferrer" class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+          <div>
+            <!-- Elegant Tech Gradient Cover Card with Instagram Badge & Category Tag -->
+            <div class="relative h-44 bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 p-5 flex flex-col justify-between border-b border-purple-900/30 overflow-hidden">
+              <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-purple-500/10 blur-xl pointer-events-none"></div>
+              <div class="relative z-10 flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-md text-[11px] font-mono font-bold tracking-wider uppercase bg-purple-500/20 text-purple-300 border border-purple-500/30 backdrop-blur-sm">
+                  AI DevOps
+                </span>
+                <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </div>
+              </div>
+
+              <!-- Visual Architecture Graphic -->
+              <div class="relative z-10 space-y-2">
+                <div class="flex items-center gap-1.5 text-[11px] font-mono text-purple-200/90 bg-black/40 px-2.5 py-1 rounded-lg border border-purple-500/20 backdrop-blur-sm">
+                  <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                  <span>21-Day Practical Roadmap</span>
+                </div>
+                <div class="flex items-center justify-between text-[10px] font-mono text-slate-400">
+                  <span>Day 1: Prompt Ops</span>
+                  <span class="text-purple-300 font-semibold">Day 21: Auto SRE Agents</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Content -->
+            <div class="p-5 space-y-2.5">
+              <div class="flex items-center gap-2 text-xs font-semibold text-pink-600 dark:text-pink-400">
+                <span>@techworldwithsahana</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors line-clamp-2">
+                From DevOps to AI-Integrated DevOps in 21 Days
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3">
+                Most 500-page tech books end up collecting dust. A structured 21-day practical roadmap to master AI workflows.
+              </p>
+            </div>
+          </div>
+
+          <div class="px-5 pb-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Reel</span>
+            <span class="text-xs font-semibold text-pink-600 dark:text-pink-400 group-hover:underline flex items-center gap-1">
+              <span>Watch Reel</span>
+              <span>↗</span>
+            </span>
+          </div>
+        </a>
+
+        <!-- Duplicate Set for Seamless 50% Loop -->
+        <!-- Insta Card 1 Duplicate -->
+        <a href="https://www.instagram.com/p/Dd9INi3BaJZ/" target="_blank" rel="noopener noreferrer" tabindex="-1" class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group" aria-hidden="true">
+          <div>
+            <div class="relative h-44 bg-gradient-to-br from-rose-950 via-slate-900 to-amber-950 p-5 flex flex-col justify-between border-b border-rose-900/30 overflow-hidden">
+              <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-rose-500/10 blur-xl pointer-events-none"></div>
+              <div class="relative z-10 flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-md text-[11px] font-mono font-bold tracking-wider uppercase bg-rose-500/20 text-rose-300 border border-rose-500/30 backdrop-blur-sm">
+                  CI/CD
+                </span>
+                <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </div>
+              </div>
+              <div class="relative z-10 space-y-2">
+                <div class="flex items-center gap-1.5 text-[11px] font-mono text-rose-200/90 bg-black/40 px-2.5 py-1 rounded-lg border border-rose-500/20 backdrop-blur-sm">
+                  <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                  <span>concurrency: cancel-in-progress</span>
+                </div>
+                <div class="flex items-center gap-2 text-[10px] font-mono text-slate-400">
+                  <span class="line-through text-slate-500">Run #1 (Auto-cancelled)</span>
+                  <span>&rarr;</span>
+                  <span class="text-emerald-400 font-semibold">Run #3 Active</span>
+                </div>
+              </div>
+            </div>
+            <div class="p-5 space-y-2.5">
+              <div class="flex items-center gap-2 text-xs font-semibold text-pink-600 dark:text-pink-400">
+                <span>@techworldwithsahana</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors line-clamp-2">
+                3 Commits = 3 Runs: Stop Burning CI/CD Minutes 🛑
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3">
+                Stop burning your CI/CD minutes on obsolete builds. Learn how concurrency controls cancel outdated pipeline runs.
+              </p>
+            </div>
+          </div>
+          <div class="px-5 pb-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Reel</span>
+            <span class="text-xs font-semibold text-pink-600 dark:text-pink-400 group-hover:underline flex items-center gap-1">
+              <span>Watch Reel</span>
+              <span>↗</span>
+            </span>
+          </div>
+        </a>
+
+        <!-- Insta Card 2 Duplicate -->
+        <a href="https://www.instagram.com/p/Dd2_Cz-JSQj/" target="_blank" rel="noopener noreferrer" tabindex="-1" class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col group" aria-hidden="true">
+          <div>
+            <div class="relative h-44 bg-gradient-to-br from-cyan-950 via-slate-900 to-blue-950 p-5 flex flex-col justify-between border-b border-cyan-900/30 overflow-hidden">
+              <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-cyan-500/10 blur-xl pointer-events-none"></div>
+              <div class="relative z-10 flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-md text-[11px] font-mono font-bold tracking-wider uppercase bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 backdrop-blur-sm">
+                  GitOps
+                </span>
+                <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </div>
+              </div>
+              <div class="relative z-10 space-y-2">
+                <div class="flex items-center gap-1.5 text-[11px] font-mono text-cyan-200/90 bg-black/40 px-2.5 py-1 rounded-lg border border-cyan-500/20 backdrop-blur-sm">
+                  <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+                  <span>Git Repository &harr; In-Cluster Pull</span>
+                </div>
+                <div class="flex items-center justify-between text-[10px] font-mono text-slate-400">
+                  <span>Push: CI Admin Access</span>
+                  <span class="text-cyan-300 font-semibold">Pull: Zero Open Ingress</span>
+                </div>
+              </div>
+            </div>
+            <div class="p-5 space-y-2.5">
+              <div class="flex items-center gap-2 text-xs font-semibold text-pink-600 dark:text-pink-400">
+                <span>@techworldwithsahana</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors line-clamp-2">
+                Push vs Pull Deployment in Kubernetes
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3">
+                Are you still giving your CI/CD runner full admin access to your production Kubernetes cluster? Here's why GitOps pull wins.
+              </p>
+            </div>
+          </div>
+          <div class="px-5 pb-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Reel</span>
+            <span class="text-xs font-semibold text-pink-600 dark:text-pink-400 group-hover:underline flex items-center gap-1">
+              <span>Watch Reel</span>
+              <span>↗</span>
+            </span>
+          </div>
+        </a>
+
+        <!-- Insta Card 3 Duplicate -->
+        <a href="https://www.instagram.com/p/Dd1PhLFBz15/" target="_blank" rel="noopener noreferrer" tabindex="-1" class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col group" aria-hidden="true">
+          <div>
+            <div class="relative h-44 bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 p-5 flex flex-col justify-between border-b border-purple-900/30 overflow-hidden">
+              <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-purple-500/10 blur-xl pointer-events-none"></div>
+              <div class="relative z-10 flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-md text-[11px] font-mono font-bold tracking-wider uppercase bg-purple-500/20 text-purple-300 border border-purple-500/30 backdrop-blur-sm">
+                  AI DevOps
+                </span>
+                <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </div>
+              </div>
+              <div class="relative z-10 space-y-2">
+                <div class="flex items-center gap-1.5 text-[11px] font-mono text-purple-200/90 bg-black/40 px-2.5 py-1 rounded-lg border border-purple-500/20 backdrop-blur-sm">
+                  <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                  <span>21-Day Practical Roadmap</span>
+                </div>
+                <div class="flex items-center justify-between text-[10px] font-mono text-slate-400">
+                  <span>Day 1: Prompt Ops</span>
+                  <span class="text-purple-300 font-semibold">Day 21: Auto SRE Agents</span>
+                </div>
+              </div>
+            </div>
+            <div class="p-5 space-y-2.5">
+              <div class="flex items-center gap-2 text-xs font-semibold text-pink-600 dark:text-pink-400">
+                <span>@techworldwithsahana</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors line-clamp-2">
+                From DevOps to AI-Integrated DevOps in 21 Days
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3">
+                Most 500-page tech books end up collecting dust. A structured 21-day practical roadmap to master AI workflows.
+              </p>
+            </div>
+          </div>
+          <div class="px-5 pb-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Reel</span>
+            <span class="text-xs font-semibold text-pink-600 dark:text-pink-400 group-hover:underline flex items-center gap-1">
+              <span>Watch Reel</span>
+              <span>↗</span>
+            </span>
+          </div>
+        </a>
+
+        </div>
+      </div>
+    </section>
+
+    </div>
+  </main>
+
+  <!-- 5. Bottom Newsletter Capture Section -->
+  <section id="newsletter" class="w-full max-w-full overflow-hidden relative py-16 bg-slate-900 text-white border-t border-slate-800">
+    <div class="w-full max-w-xl mx-auto px-4 text-center space-y-8">
+      <div class="space-y-3">
+        <span class="inline-block px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold border border-indigo-400/30">
+          Weekly Engineering Dispatch
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight" style="text-wrap: balance;">
+          Get weekly insights delivered to your inbox
+        </h2>
+        <p class="text-slate-300 text-base sm:text-lg max-w-xl mx-auto">
+          Join 1,000+ Engineers Learning from my weekly newsletter
+        </p>
+      </div>
+
+      <!-- Substack Embed Container -->
+      <div class="w-full max-w-xl mx-auto rounded-2xl overflow-hidden shadow-2xl bg-white p-2">
+        <iframe 
+          src="https://techworldwithsahana.substack.com/embed" 
+          width="100%" 
+          height="320" 
+          style="border: 1px solid #e2e8f0; border-radius: 12px; background: white" 
+          frameborder="0" 
+          scrolling="no"
+          loading="lazy"
+          title="TechWorld with Sahana Substack Newsletter Embed"
+        ></iframe>
+      </div>
+
+      <div class="flex items-center justify-center gap-6 text-xs text-slate-400">
+        <span>No spam ever</span>
+        <span>·</span>
+        <span>Unsubscribe with 1-click</span>
+        <span>·</span>
+        <span>Curated by Sahana Ghosh</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-900 py-10 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <img src="https://media.licdn.com/dms/image/v2/D5603AQFq-_jRav2PDw/profile-displayphoto-scale_400_400/B56Z9PnEHRGgAg-/0/1783747069649?e=1792627200&v=beta&t=49MjpZPNJ9nM7Euw4M6ZPyuZ1RC5TC1MVFrr54FRZLs" alt="Sahana Ghosh" class="w-8 h-8 rounded-full object-cover shrink-0" loading="lazy" referrerpolicy="no-referrer" />
+        <div class="text-sm font-semibold text-slate-800 dark:text-slate-200">
+          TechWorld with Sahana &copy; <span id="current-year">2026</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1 sm:gap-2">
+        <!-- Mail / Substack Newsletter -->
+        <a href="https://techworldwithsahana.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Substack Newsletter" class="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-slate-900 transition-colors" title="Newsletter">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </a>
+
+        <!-- Book / Topmate Store -->
+        <a href="https://topmate.io/sahana_ghosh" target="_blank" rel="noopener noreferrer" aria-label="Topmate E-Books" class="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-900 transition-colors" title="E-Books">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+        </a>
+
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/ghoshsahana/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile" class="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-900 transition-colors" title="LinkedIn">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+          </svg>
+        </a>
+
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/@TechWorldwithSahana" target="_blank" rel="noopener noreferrer" aria-label="YouTube Channel" class="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-slate-900 transition-colors" title="YouTube">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/techworldwithsahana" target="_blank" rel="noopener noreferrer" aria-label="Instagram Profile" class="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-slate-900 transition-colors" title="Instagram">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 6. Timed Pop-Up Modal 1: Newsletter Welcome (3s after page load) -->
+  <div id="modal-newsletter" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300" role="dialog" aria-modal="true" aria-labelledby="modal1-title">
+    <div class="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 transform scale-95 transition-transform duration-300" id="modal-newsletter-card">
+      <!-- Close Button -->
+      <button onclick="closeModal('modal-newsletter')" class="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Close dialog">
+        ✕
+      </button>
+
+      <div class="space-y-4">
+        <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </div>
+
+        <div>
+          <h3 id="modal1-title" class="text-xl font-bold text-slate-900 dark:text-white">
+            Join 1,000+ Engineers Learning DevOps & AI Infrastructure
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2">
+            Get Practical Guides to your Inbox every week
+          </p>
+        </div>
+
+        <!-- Simulated quick sign-up form linking to Substack -->
+        <form onsubmit="handleNewsletterSubmit(event)" class="space-y-3">
+          <div>
+            <label for="newsletter-modal-email" class="sr-only">Email address</label>
+            <input 
+              type="email" 
+              id="newsletter-modal-email" 
+              required 
+              placeholder="you@company.com" 
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            />
+          </div>
+          <button type="submit" class="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md shadow-indigo-600/30 transition-all flex items-center justify-center gap-2">
+            <span>Subscribe Free</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </form>
+
+        <p class="text-[11px] text-center text-slate-400">
+          Powered by Substack · Instant confirmation · Unsubscribe anytime
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6b. Timed Pop-Up Modal 2: Topmate E-Book Promotion (90s after page load) -->
+  <div id="modal-topmate" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300" role="dialog" aria-modal="true" aria-labelledby="modal2-title">
+    <div class="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 transform scale-95 transition-transform duration-300" id="modal-topmate-card">
+      <button onclick="closeModal('modal-topmate')" class="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Close dialog">
+        ✕
+      </button>
+
+      <div class="space-y-4">
+        <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl font-bold">
+          ⚡
+        </div>
+
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Special Engineer Deal</span>
+          <h3 id="modal2-title" class="text-xl font-bold text-slate-900 dark:text-white mt-1">
+            ⚡ Accelerate Your DevOps Career - Grab My Bestselling Blueprints
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2">
+            Get complete architectural designs, real-world scenario solutions, and incident troubleshooting runbooks crafted by Sahana Ghosh.
+          </p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-xs space-y-1 text-slate-600 dark:text-slate-300">
+          <div class="flex items-center gap-2">
+            <span class="text-emerald-500 font-bold">✓</span>
+            AI for DevOps - 21 Days Course
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-emerald-500 font-bold">✓</span>
+            DevOps Deployment Failures & Fixes
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-emerald-500 font-bold">✓</span>
+            DevOps RoadMap
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <a href="https://topmate.io/sahana_ghosh" target="_blank" rel="noopener noreferrer" onclick="closeModal('modal-topmate')" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-md shadow-emerald-600/30 transition-all flex items-center justify-center gap-2">
+            <span>Browse E-Books on Topmate</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 max-w-sm px-4 py-3 rounded-xl bg-slate-900 text-white text-sm shadow-xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300">
+    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+    <span id="toast-message">Subscribed successfully! Welcome aboard.</span>
+  </div>
+
+  <!-- Vanilla JavaScript Logic -->
+  <script>
+    // Ensure manual scroll restoration and force page start at top upon load
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.scrollTo(0, 0);
+    });
+
+    window.addEventListener('load', () => {
+      window.scrollTo(0, 0);
+    });
+
+    // 1. Theme Toggle Logic (Default: Light Mode)
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    themeToggleBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      try {
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      } catch (e) {
+        console.error('LocalStorage unavailable:', e);
+      }
+    });
+
+    // Set Copyright Year
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // 2. Track Horizontal Scroll Utility
+    function scrollTrack(trackId, offset) {
+      const track = document.getElementById(trackId);
+      if (track) {
+        track.scrollBy({ left: offset, behavior: 'smooth' });
+      }
+    }
+
+    // 3. Fallback articles in case RSS feed is offline or rate-limited
+    const fallbackArticles = [
+      {
+        title: "Building Resilient Multi-Region Kubernetes Architectures on AWS & GCP",
+        link: "https://techworldwithsahana.substack.com/",
+        pubDate: "October 2026",
+        thumbnail: "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=600&q=80",
+        description: "An architectural deep dive into cross-cloud traffic steering, Cilium mesh interconnects, and zero-downtime database failovers."
+      },
+      {
+        title: "vLLM Inference Serving at Scale: GPU Clustering & Continuous Batching",
+        link: "https://techworldwithsahana.substack.com/",
+        pubDate: "September 2026",
+        thumbnail: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&q=80",
+        description: "How we tuned PagedAttention and Ray clusters to serve 70B parameter models with sub-20ms time-to-first-token latency."
+      },
+      {
+        title: "Enterprise OpenTofu & Terraform: Surviving Monorepos & State Drifts",
+        link: "https://techworldwithsahana.substack.com/",
+        pubDate: "August 2026",
+        thumbnail: "", // Test fallback banner
+        description: "Standardizing module registries, policy-as-code guardrails, and automated drift reconciliation loops."
+      }
+    ];
+
+    // Helper: SVG Fallback Banner when article has no thumbnail
+    function getFallbackBannerHTML(title) {
+      return `
+        <div class="w-full h-48 bg-gradient-to-br from-slate-800 via-indigo-950 to-slate-900 flex flex-col items-center justify-center p-6 text-center text-indigo-200">
+          <div class="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center mb-2">
+            <svg class="w-6 h-6 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <span class="text-xs font-mono tracking-wider text-indigo-300 uppercase">DevOps Deep-Dive</span>
+        </div>
+      `;
+    }
+
+    // Render Substack Articles Cards
+    function renderSubstackArticles(articles) {
+      const container = document.getElementById('substack-track');
+      if (!container) return;
+
+      const buildArticleCard = (item, isDuplicate = false) => {
+        const title = item.title || "DevOps Architecture Breakdown";
+        const link = item.link || "https://techworldwithsahana.substack.com/";
+        const pubDateStr = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : "Recent Dispatch";
+        const thumbnail = item.thumbnail || (item.enclosure && item.enclosure.link);
+
+        const imageHTML = thumbnail ? `
+          <div class="relative h-48 bg-slate-900 overflow-hidden">
+            <img 
+              src="${thumbnail}" 
+              alt="${title.replace(/"/g, '&quot;')}" 
+              loading="lazy"
+              referrerPolicy="no-referrer"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              onerror="this.parentElement.innerHTML = getFallbackBannerHTML('${title.replace(/'/g, "\\'")}')"
+            />
+          </div>
+        ` : getFallbackBannerHTML(title);
+
+        const extraAttrs = isDuplicate ? ' tabindex="-1" aria-hidden="true"' : '';
+
+        return `
+          <a href="${link}" target="_blank" rel="noopener noreferrer"${extraAttrs} class="w-[320px] sm:w-[380px] shrink-0 card-snap bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+            <div>
+              ${imageHTML}
+              <div class="p-5">
+                <div class="text-xs text-orange-600 dark:text-orange-400 font-semibold mb-1.5 flex items-center gap-1.5">
+                  <span>${pubDateStr}</span>
+                  <span class="text-slate-300 dark:text-slate-700">·</span>
+                  <span>Substack</span>
+                </div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors line-clamp-2">
+                  ${title}
+                </h3>
+              </div>
+            </div>
+            <div class="px-5 pb-5 pt-0">
+              <span class="text-xs font-semibold text-orange-600 dark:text-orange-400 flex items-center gap-1">
+                <span>Read Full Article</span>
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </span>
+            </div>
+          </a>
+        `;
+      };
+
+      const originalSet = articles.map(item => buildArticleCard(item, false)).join('');
+      const duplicateSet = articles.map(item => buildArticleCard(item, true)).join('');
+
+      container.innerHTML = originalSet + duplicateSet;
+      container.classList.add('marquee-track', 'marquee-left', 'animate-marquee-left');
+    }
+
+    // 4. Fetch Substack Feed from rss2json
+    async function fetchSubstackFeed() {
+      const feedUrl = encodeURIComponent('https://techworldwithsahana.substack.com/feed');
+      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${feedUrl}`;
+
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+
+        if (data.status === 'ok' && Array.isArray(data.items) && data.items.length > 0) {
+          const top3 = data.items.slice(0, 3);
+          renderSubstackArticles(top3);
+        } else {
+          renderSubstackArticles(fallbackArticles);
+        }
+      } catch (err) {
+        console.warn('Substack RSS fetch failed, rendering curated articles:', err);
+        renderSubstackArticles(fallbackArticles);
+      }
+    }
+
+    // Trigger feed fetch
+    fetchSubstackFeed();
+
+    // 5. Modal Management with SessionStorage
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      const card = modal?.querySelector('div[id$="-card"]');
+      if (modal && card) {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100', 'pointer-events-auto');
+        card.classList.remove('scale-95');
+        card.classList.add('scale-100');
+      }
+    }
+
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      const card = modal?.querySelector('div[id$="-card"]');
+      if (modal && card) {
+        modal.classList.remove('opacity-100', 'pointer-events-auto');
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        card.classList.remove('scale-100');
+        card.classList.add('scale-95');
+        // Record dismissal in sessionStorage
+        try {
+          sessionStorage.setItem('dismissed_' + modalId, 'true');
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
+    // Close on backdrop click
+    ['modal-newsletter', 'modal-topmate'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('click', (e) => {
+          if (e.target === el) closeModal(id);
+        });
+      }
+    });
+
+    // Close on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal('modal-newsletter');
+        closeModal('modal-topmate');
+      }
+    });
+
+    // Timed Pop-Up 1: Newsletter Welcome (3 seconds)
+    setTimeout(() => {
+      try {
+        const dismissed = sessionStorage.getItem('dismissed_modal-newsletter');
+        if (!dismissed) {
+          openModal('modal-newsletter');
+        }
+      } catch (e) {
+        openModal('modal-newsletter');
+      }
+    }, 3000);
+
+    // Timed Pop-Up 2: Topmate Promotion (90 seconds = 90,000ms)
+    setTimeout(() => {
+      try {
+        const dismissed = sessionStorage.getItem('dismissed_modal-topmate');
+        if (!dismissed) {
+          openModal('modal-topmate');
+        }
+      } catch (e) {
+        openModal('modal-topmate');
+      }
+    }, 90000);
+
+    // Form submission simulation & Toast
+    function handleNewsletterSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('newsletter-modal-email');
+      const email = input ? input.value : '';
+      closeModal('modal-newsletter');
+      showToast('Subscribed ' + email + '! Welcome to the community.');
+      if (input) input.value = '';
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toast-message');
+      if (toast && msg) {
+        msg.textContent = message;
+        toast.classList.remove('translate-y-20', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+        setTimeout(() => {
+          toast.classList.remove('translate-y-0', 'opacity-100');
+          toast.classList.add('translate-y-20', 'opacity-0');
+        }, 4000);
+      }
+    }
+  </script>
+</body>
+</html>
